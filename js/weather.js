@@ -164,7 +164,7 @@ function togglingTemp(btnC,btnF){
             unit.innerHTML="°C"
         })
         tempDeg.forEach((deg)=>{
-            deg.innerHTML=convertTempTo(deg.innerHTML,"F-C")
+            deg.innerHTML=Math.round ( convertTempTo(deg.innerHTML,"F-C") )
         })
     }
     btnF.onclick=function(){  
@@ -174,7 +174,7 @@ function togglingTemp(btnC,btnF){
             unit.innerHTML="°F"
         })
         tempDeg.forEach((deg)=>{
-            deg.innerHTML=convertTempTo(deg.innerHTML,"C-F")
+            deg.innerHTML=Math.round ( convertTempTo(deg.innerHTML,"C-F") )
         })
     }
  }
@@ -344,6 +344,284 @@ allSearchInput.forEach((inpt)=>{
         
     
     }
+    
+
+    
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------for using api-----------------------------------------------------------------------------------------
+//when click on icon search
+searchBtn.addEventListener("click",()=>{
+    let cityCoord=getCityCoordinates(searchInput.value,allCitiesData)
+    let lat;
+    let lon;
+    //error handling when user input incorrect or empty location and click on search button so that will display data of my current location 
+    try{   
+        lat=cityCoord.lat
+        lon=cityCoord.lon
+       
+        getWeatherWithApi(lon,lat,"52726fb4078f8d3926c7f682c9341f90")
+    }catch{ 
+
+        
+    }
+    
+
+});  
+
+function getWeatherWithApi(lon,lat,apiKey="52726fb4078f8d3926c7f682c9341f90"){
+    
+        
+    // let response=await fetch()    
+    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`)
+    .then((response)=>{
+            if(response.ok){
+                return response.json()
+            }else{
+                if(response.statusText="Unauthorized"){//status code=401
+                    alert (`${response.statusText}\nplease add correct api key`)
+                }
+            }   
+        }) 
+    .then((currentWeather)=>{
+        let location_data=`${currentWeather.name},${currentWeather.sys.country}`
+        let temp_data=Math.round(currentWeather.main.temp)   
+        let cond_data=currentWeather.weather[0].main
+        let img_data=getIcon(cond_data,currentWeather.weather[0].icon)
+        let Hum_data=currentWeather.main.humidity
+
+        let vis_data=currentWeather.visibility/1000
+        let wind_data=currentWeather.wind.speed
+        let wind_deg_data=currentWeather.wind.deg
+        let sunrise_data=currentWeather.sys.sunrise
+        let sunset_data=currentWeather.sys.sunset
+
+        let time_data =currentWeather.dt
+        
+        //display today data in short weather section
+        Location.innerText=location_data
+        mainImg.src=img_data
+        mainTemp.innerText=Math.round(temp_data)   
+        mainCond.innerText=cond_data
+        mainHum.innerText=Hum_data+"%"
+        date.innerText= "updated at "+convertUnixtotime(time_data,"day")
+
+        //display today data in daily details section
+        humIndex.innerText=Hum_data
+        humStatus.innerText=getHumidityStatus(Hum_data)
+        updatingHumCircle()
+
+
+        windIndex.innerText=wind_data
+        windStatus.innerText=getWindDirection(wind_deg_data)
+        // when i used Math.random because id didnt have this data in database 
+        visIndex.innerText=vis_data
+        visStatus.innerText=getVisibilityStatus(vis_data)
+       
+        sunrise.innerText=convertUnixtotime(sunrise_data)
+        sunset.innerText=convertUnixtotime(sunset_data)
+
+        })
+        .catch((err)=>{})     
+}
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+// ------------------------------------------for using database-----------------------------------------------------------------------------------------
+//when click on icon search
+searchBtnDB.addEventListener("click",()=>{
+    
+    let cityCoord_Db=getCityCoordinates(searchInputDB.value,spCitiesData)
+    let lat_Db;
+    let lon_Db;
+    //error handling when user input incorrect or empty location and click on search button so that will display data of my current location 
+    try{   
+        lat_Db=cityCoord_Db.lat
+        lon_Db=cityCoord_Db.lon 
+        getWeatherWithDB(lon_Db,lat_Db)
+    }catch{ 
+
+    }
+   
+
+});  
+
+
+//get And Display Weather  fucntion with database
+function getWeatherWithDB(lon_Db,lat_Db){
+       
+    async function getWeatherData(){
+        
+        let response;
+        let arrOfResponses;
+        let currentWeather,dailyWeather,hourlyWeather;
+
+        //-----get current weather   
+        response=await fetch(`mock server/weatherEdit.json`);
+        arrOfResponses=await response.json() 
+      
+        currentWeather=getCorrectResponse(lat_Db,lon_Db,arrOfResponses)
+        // if my location not found in database so that will display data of my current location
+        if(typeof(currentWeather)=="undefined"){
+            currentWeather=getClosestResponse(lat_Db,lon_Db,arrOfResponses)
+            console.log(currentWeather)
+        }
+        let location_data=`${currentWeather.city.name},${currentWeather.city.country}`
+        let temp_data=Math.round( convertTempTo(currentWeather.main.temp,"k-c") )
+        let cond_data=currentWeather.weather[0].main
+        let img_data=getIcon(cond_data,currentWeather.weather[0].icon)
+        let Hum_data=currentWeather.main.humidity
+        
+        
+        //display today data in short weather
+        
+
+        Location.innerText=location_data
+        mainImg.src=img_data
+        mainTemp.innerText=temp_data
+        mainCond.innerText=cond_data
+        mainHum.innerText=Hum_data
+
+    //-----get daily weather for 7days
+    response=await fetch(`mock server/dailyEdit.json`);
+    arrOfResponses=await response.json()
+    
+    dailyWeather=getCorrectResponse(lat_Db,lon_Db,arrOfResponses)
+    if(typeof(dailyWeather)=="undefined"){
+        dailyWeather=getClosestResponse(lat_Db,lon_Db,arrOfResponses)
+    }
+
+    let allDays_data=dailyWeather.data
+    function return7DaysFromNow(allDays_data){
+        let days=[]
+        let currentDay=getDateTime().substring(0,3)
+        for(let i=0;i<allDays_data.length;i++){
+            let firstDay=convertUnixtotime(allDays_data[i].dt,"day").substring(0,3)
+            if(currentDay.toUpperCase()==firstDay.toUpperCase()){
+                for(let j=i;j<(i+7);j++){
+                    days.push(allDays_data[j])
+                }
+                return days
+            }
+        }
+
+        let backupDays=[]
+        for(let i=0;i<7;i++){
+            backupDays.push(allDays_data[i])
+        }
+        return backupDays
+            
+    }
+    let days_data=return7DaysFromNow(allDays_data)
+        //display today data in daily sections
+        
+
+
+        for(let i=0; i<days_data.length; i++){
+            daysTitle[i].innerText =convertUnixtotime(days_data[i].dt ,"day").substring(0,3)
+            daysImg[i].src=getIcon(days_data[i].weather[0].main,days_data[i].weather[0].icon)
+            daysTemp[i].innerText= Math.round ( convertTempTo(days_data[i].temp.day ,"K-C") )
+        }
+
+        //display today data in day details
+        function displayDailyDetails(onThisDay){
+            //display day details
+            humIndex.innerText=onThisDay.humidity+"%"
+            humStatus.innerText=getHumidityStatus(onThisDay.humidity)
+            updatingHumCircle()
+            windIndex.innerText=convertspeedTo(onThisDay.speed)
+            windStatus.innerText=getWindDirection(onThisDay.deg)
+            // when i used Math.random because id didnt have this data in database 
+            visIndex.innerText=(Math.random()*10).toFixed(2)
+            visStatus.innerText=getVisibilityStatus((Math.random()*10).toFixed(2))
+            uvIndex.innerText=onThisDay.uvi
+            uvStatus.innerText=measureUvIndex(onThisDay.uvi)
+            updatingUvCircle()
+            airIndex.innerText=(Math.random()*100).toFixed(0)
+            airStatus.innerText=getAirQualityStatus((Math.random()*100).toFixed(0))
+        }
+        
+        displayDailyDetails(days_data[0])
+        
+        days.forEach((day)=>{
+           
+            day.addEventListener("click",()=>{
+                for(let i=0;i<days.length;i++){
+                    days[i].classList.remove("active")
+                }
+                day.classList.add("active")
+                dayName=day.innerText.substring(0,3).trim().toUpperCase()
+                for(let i=0;i<days_data.length;i++){
+                    let daysName_data=convertUnixtotime(days_data[i].dt,"day").substring(0,3).toUpperCase()
+                    if(daysName_data==dayName){ 
+                        displayDailyDetails(days_data[i])
+                    }
+                }
+            })
+            
+        })
+       
+        //get today data in hourly
+        response=await fetch(`mock server/hourlyEdit.json`);
+        arrOfResponses=await response.json()
+        
+        hourlyWeather=getCorrectResponse(lat_Db,lon_Db,arrOfResponses)
+        if(typeof(hourlyWeather)=="undefined"){
+            hourlyWeather=getClosestResponse(lat_Db,lon_Db,arrOfResponses)
+        }
+        let allHours_data=hourlyWeather.data
+        
+        function return24HoursFromNow(allHours_data){
+            let hours=[]
+            let currentHour=new Date().getHours()
+
+            for(let i=0;i<allHours_data.length;i++){
+                let firstHour=new Date(allHours_data[i].dt* 1000).getHours()
+                    
+                if(currentHour == firstHour ||(currentHour+1) == firstHour||(currentHour+2) == firstHour ){
+                    for(let j=i;j<(i+24);j++){
+                        hours.push(allHours_data[j])
+                    }
+                    return hours
+                }
+            }
+    
+            let backupHours=[]
+            for(let i=0;i<24;i++){
+                backupHours.push(allHours_data[i])
+            }
+            
+            return backupHours      
+        }
+        let hours_data=return24HoursFromNow(allHours_data)
+        
+
+
+        //display today data in hourly sections
+       
+        const hours=document.querySelectorAll(".daily .slider .today");
+        const hoursTitle=document.querySelectorAll(".daily .slider .today>h2");
+        const hoursImg=document.querySelectorAll(".daily .slider .today>img");
+        const hoursTemp=document.querySelectorAll(".daily .slider .today>div>h2");
+
+        for(let i=0; i<hours_data.length; i++){
+            hoursTitle[i].innerText =convertUnixtotime(hours_data[i].dt)
+            hoursImg[i].src=getIcon(hours_data[i].weather[0].main,hours_data[i].weather[0].icon)
+            hoursTemp[i].innerText= Math.round  ( convertTempTo(hours_data[i].main.temp ,"K-C") )
+        }
+
+    }getWeatherData()
+}
+
+
+
 
 //---------------------------------------------------------------functions---------------------------------------------------------------------------------------------------------------------------
 
@@ -650,283 +928,4 @@ function updatingUvCircle(){
     let uvIndexNum=parseInt(uvIndex.innerHTML.replace("+","")) ;
     uvCircle.style.background=` conic-gradient(#5e5ef3c0 ${(uvIndexNum*360)/11}deg, rgb(190, 189, 189) 0deg )`
 }updatingUvCircle()
-
-
-
-
-
-
-
-// ------------------------------------------------------------------------------------------------------------------------------------------------
-// ------------------------------------------for using api-----------------------------------------------------------------------------------------
-//when click on icon search
-searchBtn.addEventListener("click",()=>{
-    let cityCoord=getCityCoordinates(searchInput.value,allCitiesData)
-    let lat;
-    let lon;
-    //error handling when user input incorrect or empty location and click on search button so that will display data of my current location 
-    try{   
-        lat=cityCoord.lat
-        lon=cityCoord.lon
-       
-        getWeatherWithApi(lon,lat,"52726fb4078f8d3926c7f682c9341f90")
-    }catch{ 
-
-        
-    }
-    
-
-});  
-
-function getWeatherWithApi(lon,lat,apiKey="52726fb4078f8d3926c7f682c9341f90"){
-    
-        
-    // let response=await fetch()    
-    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`)
-    .then((response)=>{
-            if(response.ok){
-                return response.json()
-            }else{
-                if(response.statusText="Unauthorized"){//status code=401
-                    alert (`${response.statusText}\nplease add correct api key`)
-                }
-            }   
-        }) 
-    .then((currentWeather)=>{
-        let location_data=`${currentWeather.name},${currentWeather.sys.country}`
-        let temp_data=currentWeather.main.temp   
-        let cond_data=currentWeather.weather[0].main
-        let img_data=getIcon(cond_data,currentWeather.weather[0].icon)
-        let Hum_data=currentWeather.main.humidity
-
-        let vis_data=currentWeather.visibility/1000
-        let wind_data=currentWeather.wind.speed
-        let wind_deg_data=currentWeather.wind.deg
-        let sunrise_data=currentWeather.sys.sunrise
-        let sunset_data=currentWeather.sys.sunset
-
-        let time_data =currentWeather.dt
-        
-        //display today data in short weather section
-        Location.innerText=location_data
-        mainImg.src=img_data
-        mainTemp.innerText=temp_data
-        mainCond.innerText=cond_data
-        mainHum.innerText=Hum_data+"%"
-        date.innerText= "updated at "+convertUnixtotime(time_data,"day")
-
-        //display today data in daily details section
-        humIndex.innerText=Hum_data
-        humStatus.innerText=getHumidityStatus(Hum_data)
-        updatingHumCircle()
-
-
-        windIndex.innerText=wind_data
-        windStatus.innerText=getWindDirection(wind_deg_data)
-        // when i used Math.random because id didnt have this data in database 
-        visIndex.innerText=vis_data
-        visStatus.innerText=getVisibilityStatus(vis_data)
-       
-        sunrise.innerText=convertUnixtotime(sunrise_data)
-        sunset.innerText=convertUnixtotime(sunset_data)
-
-        })
-        .catch((err)=>{})     
-}
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-// ------------------------------------------for using database-----------------------------------------------------------------------------------------
-//when click on icon search
-searchBtnDB.addEventListener("click",()=>{
-    
-    let cityCoord_Db=getCityCoordinates(searchInputDB.value,spCitiesData)
-    let lat_Db;
-    let lon_Db;
-    //error handling when user input incorrect or empty location and click on search button so that will display data of my current location 
-    try{   
-        lat_Db=cityCoord_Db.lat
-        lon_Db=cityCoord_Db.lon 
-        getWeatherWithDB(lon_Db,lat_Db)
-    }catch{ 
-
-    }
-   
-
-});  
-
-
-//get And Display Weather  fucntion with database
-function getWeatherWithDB(lon_Db,lat_Db){
-       
-    async function getWeatherData(){
-        
-        let response;
-        let arrOfResponses;
-        let currentWeather,dailyWeather,hourlyWeather;
-
-        //-----get current weather   
-        response=await fetch(`mock server/weatherEdit.json`);
-        arrOfResponses=await response.json() 
-      
-        currentWeather=getCorrectResponse(lat_Db,lon_Db,arrOfResponses)
-        // if my location not found in database so that will display data of my current location
-        if(typeof(currentWeather)=="undefined"){
-            currentWeather=getClosestResponse(lat_Db,lon_Db,arrOfResponses)
-            console.log(currentWeather)
-        }
-        let location_data=`${currentWeather.city.name},${currentWeather.city.country}`
-        let temp_data=convertTempTo(currentWeather.main.temp,"k-c")  
-        let cond_data=currentWeather.weather[0].main
-        let img_data=getIcon(cond_data,currentWeather.weather[0].icon)
-        let Hum_data=currentWeather.main.humidity
-        
-        
-        //display today data in short weather
-        
-
-        Location.innerText=location_data
-        mainImg.src=img_data
-        mainTemp.innerText=temp_data
-        mainCond.innerText=cond_data
-        mainHum.innerText=Hum_data
-
-    //-----get daily weather for 7days
-    response=await fetch(`mock server/dailyEdit.json`);
-    arrOfResponses=await response.json()
-    
-    dailyWeather=getCorrectResponse(lat_Db,lon_Db,arrOfResponses)
-    if(typeof(dailyWeather)=="undefined"){
-        dailyWeather=getClosestResponse(lat_Db,lon_Db,arrOfResponses)
-    }
-
-    let allDays_data=dailyWeather.data
-    function return7DaysFromNow(allDays_data){
-        let days=[]
-        let currentDay=getDateTime().substring(0,3)
-        for(let i=0;i<allDays_data.length;i++){
-            let firstDay=convertUnixtotime(allDays_data[i].dt,"day").substring(0,3)
-            if(currentDay.toUpperCase()==firstDay.toUpperCase()){
-                for(let j=i;j<(i+7);j++){
-                    days.push(allDays_data[j])
-                }
-                return days
-            }
-        }
-
-        let backupDays=[]
-        for(let i=0;i<7;i++){
-            backupDays.push(allDays_data[i])
-        }
-        return backupDays
-            
-    }
-    let days_data=return7DaysFromNow(allDays_data)
-        //display today data in daily sections
-        
-
-
-        for(let i=0; i<days_data.length; i++){
-            daysTitle[i].innerText =convertUnixtotime(days_data[i].dt ,"day").substring(0,3)
-            daysImg[i].src=getIcon(days_data[i].weather[0].main,days_data[i].weather[0].icon)
-            daysTemp[i].innerText= convertTempTo(days_data[i].temp.day ,"K-C") 
-        }
-
-        //display today data in day details
-        function displayDailyDetails(onThisDay){
-            //display day details
-            humIndex.innerText=onThisDay.humidity+"%"
-            humStatus.innerText=getHumidityStatus(onThisDay.humidity)
-            updatingHumCircle()
-            windIndex.innerText=convertspeedTo(onThisDay.speed)
-            windStatus.innerText=getWindDirection(onThisDay.deg)
-            // when i used Math.random because id didnt have this data in database 
-            visIndex.innerText=(Math.random()*10).toFixed(2)
-            visStatus.innerText=getVisibilityStatus((Math.random()*10).toFixed(2))
-            uvIndex.innerText=onThisDay.uvi
-            uvStatus.innerText=measureUvIndex(onThisDay.uvi)
-            updatingUvCircle()
-            airIndex.innerText=(Math.random()*100).toFixed(0)
-            airStatus.innerText=getAirQualityStatus((Math.random()*100).toFixed(0))
-        }
-        
-        displayDailyDetails(days_data[0])
-        
-        days.forEach((day)=>{
-           
-            day.addEventListener("click",()=>{
-                for(let i=0;i<days.length;i++){
-                    days[i].classList.remove("active")
-                }
-                day.classList.add("active")
-                dayName=day.innerText.substring(0,3).trim().toUpperCase()
-                for(let i=0;i<days_data.length;i++){
-                    let daysName_data=convertUnixtotime(days_data[i].dt,"day").substring(0,3).toUpperCase()
-                    if(daysName_data==dayName){ 
-                        displayDailyDetails(days_data[i])
-                    }
-                }
-            })
-            
-        })
-       
-        //get today data in hourly
-        response=await fetch(`mock server/hourlyEdit.json`);
-        arrOfResponses=await response.json()
-        
-        hourlyWeather=getCorrectResponse(lat_Db,lon_Db,arrOfResponses)
-        if(typeof(hourlyWeather)=="undefined"){
-            hourlyWeather=getClosestResponse(lat_Db,lon_Db,arrOfResponses)
-        }
-        let allHours_data=hourlyWeather.data
-        
-        function return24HoursFromNow(allHours_data){
-            let hours=[]
-            let currentHour=new Date().getHours()
-
-            for(let i=0;i<allHours_data.length;i++){
-                let firstHour=new Date(allHours_data[i].dt* 1000).getHours()
-                    
-                if(currentHour == firstHour ||(currentHour+1) == firstHour||(currentHour+2) == firstHour ){
-                    for(let j=i;j<(i+24);j++){
-                        hours.push(allHours_data[j])
-                    }
-                    return hours
-                }
-            }
-    
-            let backupHours=[]
-            for(let i=0;i<24;i++){
-                backupHours.push(allHours_data[i])
-            }
-            
-            return backupHours      
-        }
-        let hours_data=return24HoursFromNow(allHours_data)
-        
-
-
-        //display today data in hourly sections
-       
-        const hours=document.querySelectorAll(".daily .slider .today");
-        const hoursTitle=document.querySelectorAll(".daily .slider .today>h2");
-        const hoursImg=document.querySelectorAll(".daily .slider .today>img");
-        const hoursTemp=document.querySelectorAll(".daily .slider .today>div>h2");
-
-        for(let i=0; i<hours_data.length; i++){
-            hoursTitle[i].innerText =convertUnixtotime(hours_data[i].dt)
-            hoursImg[i].src=getIcon(hours_data[i].weather[0].main,hours_data[i].weather[0].icon)
-            hoursTemp[i].innerText= convertTempTo(hours_data[i].main.temp ,"K-C") 
-        }
-
-    }getWeatherData()
-}
 
