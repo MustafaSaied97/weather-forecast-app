@@ -1,96 +1,10 @@
-//define all nodes-------------------------------------------------------------------
-const root=document.querySelector(":root");
-const body=document.querySelector("body");
-const clouds=document.querySelectorAll(".cloud img")
-//define  nodes of page0-------------------------------------------------------------------
-const page0=document.querySelector(".page0");
-const apiBtn=document.querySelector(".page0 .api");
-const dbBtn=document.querySelector(".page0 .database");
+import * as nod from './allNodes.js'
 
-//define  nodes of home page-------------------------------------------------------------------
-const homePage=document.querySelector(".homepage");
-//nav bar nodes
-    const btnDay=document.querySelector(".day-week .day");
-    const btnWeek=document.querySelector(".day-week .week");
-    const tempUnit=[document.querySelector(".short-weather .status span") , ...document.querySelectorAll(".daily .card .temp span") ]
-    const tempDeg=[document.querySelector(".short-weather .status h2") , ...document.querySelectorAll(".daily .card .temp h2") ]
-
-    const btnC=document.querySelector(".temp-unit .celcius");
-    const btnF=document.querySelector(".temp-unit  .fahrenheit");
-
-    const btnLight=document.querySelector(".mode .light");
-    const btnDark=document.querySelector(".mode  .dark");
-
-
-    const backBtn=document.querySelector(".back ");
-
-    //at seacrh
-        const allSearchInput=document.querySelectorAll(".search .search-text")
-        const searchInput=document.querySelector(".search .search-text.by-api")
-        const searchInputDB=document.querySelector(".search .search-text.by-database")
-        const searchBtn=document.querySelector(".search .search-icon.by-api ")
-        const searchBtnDB=document.querySelector(".search .search-icon.by-database ")
-        const ul = document.querySelector("nav .search .suggesstion")
-        
-//
-
-// container node
-    const container=document.querySelector(".container")
-// short wather section nodes
-    const date=document.querySelector(".short-weather .time .by-api")
-    const dateDB=document.querySelector(".short-weather .time .by-database")
-    // const dateDB=document.querySelector(".short-weather .time>h2")
-   
-
-    const Location=document.querySelector(".short-weather .location span")
-    const mainImg=document.querySelector(".short-weather .status img")
-    const mainTemp=document.querySelector(".short-weather .status h2")
-    const mainCond=document.getElementById("mainCondition")
-    const mainHum=document.getElementById("mainHumidity")
-//
-
-// daily section nodes
-    const daily=document.querySelector(".daily")
-    const slider=document.querySelector(".daily .slider")
-    const btnSliderLeft=document.querySelector(".daily .slider  .left")
-    const btnSliderRight=document.querySelector(".daily .slider  .right")
-    const cards=document.querySelectorAll(".daily .slider  .card")
-    const h2cards=document.querySelectorAll(".daily .slider  .card>h2")
-
-
-    const days=document.querySelectorAll(".daily .slider .week");
-    const daysTitle=document.querySelectorAll(".daily .slider .week>h2");
-    const daysImg=document.querySelectorAll(".daily .slider .week>img");
-    const daysTemp=document.querySelectorAll(".daily .slider .week>div>h2");
-//
-
-//daily details section
-const HumidityCircle=document.querySelector(".Humidity .circle");
-const humIndex=document.getElementById("humIndex")
-const humStatus=document.getElementById("humStatus")
-
-const uvDiv=document.querySelector(".day-details .uv");
-const airDiv=document.querySelector(".day-details .air");
-const visDiv=document.querySelector(".day-details .visibility");
-const sunDiv=document.querySelector(".day-details .sun");
-
-
-const uvCircle=document.querySelector(".uv .circle");
-const uvIndex=document.querySelector(".uv .circle .index");
-const uvStatus=document.getElementById("uvStatus")
-const airIndex=document.getElementById("airIndex")
-const airStatus=document.getElementById("airStatus")
-const windIndex=document.getElementById("windIndex")
-const windStatus=document.getElementById("windStatus")
-const visIndex=document.getElementById("visIndex")
-const visStatus=document.getElementById("visStatus")
-const sunrise=document.getElementById("sunrise")
-const sunset=document.getElementById("sunset")
 //----------------------------------------------refresh system---to stay in same page after refreshing---------------------
 
 var tracer;
 
-body.onload=()=>{
+nod.body.onload=()=>{
     
     let pageStr=document.cookie
     let page=pageStr.split("=")[1] 
@@ -104,20 +18,20 @@ body.onload=()=>{
 }
 
 //page0---------------------------------------------------------------------------------------
-apiBtn.addEventListener("click",()=>{  
+nod.apiBtn.addEventListener("click",()=>{  
     turnToApiPage()
     tracer="apiPage"
     document.cookie="page="+tracer;
     // console.log(document.cookie)
 })
-dbBtn.addEventListener("click",()=>{
+nod.dbBtn.addEventListener("click",()=>{
   turnToDBPage()
   tracer="DBpage"
   document.cookie="page="+tracer;
 //   console.log(document.cookie)
 })
 //home page---------------------------------------------------------------------------------------
-backBtn.addEventListener("click",()=>{
+nod.backBtn.addEventListener("click",()=>{
     turnToPage0()
     tracer="page0"
     document.cookie="page="+tracer;
@@ -131,11 +45,11 @@ function togglingWeekDay(btnDay,btnWeek){
         dailyOrHourly.innerText="Hourly"
         this.classList.add("active")
         btnWeek.classList.remove("active")
-        for(let i=0;i<cards.length;i++){
+        for(let i=0;i<nod.cards.length;i++){
             if(i<7){
-                cards[i].style.display="none"
+                nod.cards[i].style.display="none"
             }else{
-                cards[i].style.display="flex" 
+                nod.cards[i].style.display="flex" 
             } 
         }
     }
@@ -143,11 +57,11 @@ function togglingWeekDay(btnDay,btnWeek){
         dailyOrHourly.innerText="Daily"
         this.classList.add("active")
         btnDay.classList.remove("active")
-        for(let i=0;i<cards.length;i++){
+        for(let i=0;i<nod.cards.length;i++){
             if(i>=7){
-                cards[i].style.display="none"
+                nod.cards[i].style.display="none"
             }else{
-                cards[i].style.display="flex"
+                nod.cards[i].style.display="flex"
             }
             
         }
@@ -160,20 +74,20 @@ function togglingTemp(btnC,btnF){
     btnC.onclick=function(){  
         this.classList.add("active")
         btnF.classList.remove("active")
-        tempUnit.forEach((unit)=>{
+        nod.tempUnit.forEach((unit)=>{
             unit.innerHTML="°C"
         })
-        tempDeg.forEach((deg)=>{
+        nod.tempDeg.forEach((deg)=>{
             deg.innerHTML=Math.round ( convertTempTo(deg.innerHTML,"F-C") )
         })
     }
     btnF.onclick=function(){  
         this.classList.add("active")
         btnC.classList.remove("active")
-        tempUnit.forEach((unit)=>{
+        nod.tempUnit.forEach((unit)=>{
             unit.innerHTML="°F"
         })
-        tempDeg.forEach((deg)=>{
+        nod.tempDeg.forEach((deg)=>{
             deg.innerHTML=Math.round ( convertTempTo(deg.innerHTML,"C-F") )
         })
     }
@@ -184,15 +98,15 @@ function togglingLightDark(btnLight,btnDark){
     btnLight.onclick=function(){  
         this.classList.add("active")
         btnDark.classList.remove("active")
-        root.style.setProperty('--backColor','linear-gradient(rgb(240, 233, 233) 100px,rgb(129, 178, 218))') 
-        root.style.setProperty('--dayDetailsColor','rgb(188, 210, 228)') 
+        nod.root.style.setProperty('--backColor','linear-gradient(rgb(240, 233, 233) 100px,rgb(129, 178, 218))') 
+        nod.root.style.setProperty('--dayDetailsColor','rgb(188, 210, 228)') 
 
     }
     btnDark.onclick=function(){  
         this.classList.add("active")
         btnLight.classList.remove("active")
-        root.style.setProperty('--backColor','linear-gradient(rgba(255, 255, 255, 0.567),rgba(3, 7, 105, 0.852)') 
-        root.style.setProperty('--dayDetailsColor','rgb(203, 204, 246)') 
+        nod.root.style.setProperty('--backColor','linear-gradient(rgba(255, 255, 255, 0.567),rgba(3, 7, 105, 0.852)') 
+        nod.root.style.setProperty('--dayDetailsColor','rgb(203, 204, 246)') 
     }
 }
 
@@ -201,9 +115,9 @@ function togglingLightDark(btnLight,btnDark){
 
  
 
-togglingWeekDay(btnDay,btnWeek)
-togglingTemp(btnC,btnF)
-togglingLightDark(btnLight,btnDark)
+togglingWeekDay(nod.btnDay,nod.btnWeek)
+togglingTemp(nod.btnC,nod.btnF)
+togglingLightDark(nod.btnLight,nod.btnDark)
 
 
 
@@ -215,23 +129,23 @@ togglingLightDark(btnLight,btnDark)
 
 /*----------------------------input  search----------------------------------------------------*/
 
-allSearchInput.forEach((inpt)=>{
+nod.allSearchInput.forEach((inpt)=>{
     inpt.addEventListener("click",()=>{
         inpt.style.setProperty("width","250px")
-        ul.style.setProperty("display","block")   
+        nod.ul.style.setProperty("display","block")   
     })
 })
 
-container.addEventListener("click",()=>{
-    searchInput.style.setProperty("width","0px")
-    searchInputDB.style.setProperty("width","0px")
-    ul.style.setProperty("display","none")   
+nod.container.addEventListener("click",()=>{
+    nod.searchInput.style.setProperty("width","0px")
+    nod.searchInputDB.style.setProperty("width","0px")
+    nod.ul.style.setProperty("display","none")   
 })
 
 // control search width
 
 
-allSearchInput.forEach((inpt)=>{
+nod.allSearchInput.forEach((inpt)=>{
     inpt.addEventListener("input", () =>{
         if(inpt.value){
             inpt.style.setProperty("width","250px")
@@ -288,7 +202,7 @@ allSearchInput.forEach((inpt)=>{
                         li=document.createElement("li");
                         li.innerHTML=citiesName[i] 
                         if(liNum<15){
-                            ul.appendChild(li);
+                            nod.ul.appendChild(li);
                         }
                         liNum++
                         li.addEventListener("click", function () {
@@ -312,8 +226,8 @@ allSearchInput.forEach((inpt)=>{
         }
 
 
-        suggesstion(allSearchInput[0],citiesName) 
-        suggesstion(allSearchInput[1],spCitiesName) 
+        suggesstion(nod.allSearchInput[0],citiesName) 
+        suggesstion(nod.allSearchInput[1],spCitiesName) 
     })
          
 
@@ -336,8 +250,8 @@ allSearchInput.forEach((inpt)=>{
                 alert("not found in database!")
             }
         }else{
-            console.log(getComputedStyle(searchBtnDB).display)
-            console.log(getComputedStyle(searchBtn).display)
+            console.log(getComputedStyle(nod.searchBtnDB).display)
+            console.log(getComputedStyle(nod.searchBtn).display)
             alert("no input for search yet! ")
             
         }
@@ -589,62 +503,62 @@ function getDateTime(){
 }
 
 //for updating time every second
-setInterval(()=>{dateDB.innerText=getDateTime()},1000)
+setInterval(()=>{nod.dateDB.innerText=getDateTime()},1000)
 
 /*--------------------------------------------when refreshing page stay in same page----------------------------------------------------------------------*/
 function turnToApiPage(){
-    homePage.style.setProperty("display","block")
-    searchInput.style.setProperty("display","block")
-    searchBtn.style.setProperty("display","block")
-    date.style.setProperty("display","block")
+    nod.homePage.style.setProperty("display","block")
+    nod.searchInput.style.setProperty("display","block")
+    nod.searchBtn.style.setProperty("display","block")
+    nod.date.style.setProperty("display","block")
 
     
-    page0.style.setProperty("display","none")
-    searchInputDB.style.setProperty("display","none")
-    searchBtnDB.style.setProperty("display","none")
-    dateDB.style.setProperty("display","none")
+    nod.page0.style.setProperty("display","none")
+    nod.searchInputDB.style.setProperty("display","none")
+    nod.searchBtnDB.style.setProperty("display","none")
+    nod.dateDB.style.setProperty("display","none")
 
-    container.classList.remove("not-api")
-    btnDay.classList.remove("not-api")
-    btnWeek.classList.remove("not-api")
-    daily.classList.remove("not-api")
-    uvDiv.classList.remove("not-api")
-    airDiv.classList.remove("not-api")
-    visDiv.classList.remove("not-api")
-    sunDiv.classList.remove("not-api")
-    clouds.forEach((cloud)=>{
+    nod.container.classList.remove("not-api")
+    nod.btnDay.classList.remove("not-api")
+    nod.btnWeek.classList.remove("not-api")
+    nod.daily.classList.remove("not-api")
+    nod.uvDiv.classList.remove("not-api")
+    nod.airDiv.classList.remove("not-api")
+    nod.visDiv.classList.remove("not-api")
+    nod.sunDiv.classList.remove("not-api")
+    nod.clouds.forEach((cloud)=>{
         cloud.style.setProperty("animation-play-state","paused")
     })
 }
 function turnToDBPage(){
-    homePage.style.setProperty("display","block")
-    searchInputDB.style.setProperty("display","block")
-    searchBtnDB.style.setProperty("display","block")
-    dateDB.style.setProperty("display","block")
+    nod.homePage.style.setProperty("display","block")
+    nod.searchInputDB.style.setProperty("display","block")
+    nod.searchBtnDB.style.setProperty("display","block")
+    nod.dateDB.style.setProperty("display","block")
 
 
-    page0.style.setProperty("display","none")
-    searchInput.style.setProperty("display","none")
-    searchBtn.style.setProperty("display","none")
-    date.style.setProperty("display","none")
+    nod.page0.style.setProperty("display","none")
+    nod.searchInput.style.setProperty("display","none")
+    nod.searchBtn.style.setProperty("display","none")
+    nod.date.style.setProperty("display","none")
 
-    container.classList.add("not-api")
-    btnDay.classList.add("not-api")
-    btnWeek.classList.add("not-api")
-    daily.classList.add("not-api")
-    uvDiv.classList.add("not-api")
-    airDiv.classList.add("not-api")
-    visDiv.classList.add("not-api")
-    sunDiv.classList.add("not-api")
-    clouds.forEach((cloud)=>{
+    nod.container.classList.add("not-api")
+    nod.btnDay.classList.add("not-api")
+    nod.btnWeek.classList.add("not-api")
+    nod.daily.classList.add("not-api")
+    nod.uvDiv.classList.add("not-api")
+    nod.airDiv.classList.add("not-api")
+    nod.visDiv.classList.add("not-api")
+    nod.sunDiv.classList.add("not-api")
+    nod.clouds.forEach((cloud)=>{
         cloud.style.setProperty("animation-play-state","paused")
     })
 }
 function turnToPage0(){
-    homePage.style.setProperty("display","none")
-    page0.style.setProperty("display","block")
+    nod.homePage.style.setProperty("display","none")
+    nod.page0.style.setProperty("display","block")
     
-    clouds.forEach((cloud)=>{
+    nod.clouds.forEach((cloud)=>{
         cloud.style.setProperty("animation-play-state","running")
     })
 }
@@ -668,13 +582,13 @@ arrowIcons.forEach(icon => {
 
 /*---------------------------------progress circle------------------------------------------------------------------------ */
 function updatingHumCircle(){
-    let humIndexNum=parseInt(humIndex.innerHTML.replace("%","")) ;
-    HumidityCircle.style.background=` conic-gradient(#5e5ef3c0 ${(humIndexNum/100)*360}deg, rgb(190, 189, 189) 0deg )`
+    let humIndexNum=parseInt(nod.humIndex.innerHTML.replace("%","")) ;
+    nod.HumidityCircle.style.background=` conic-gradient(#5e5ef3c0 ${(humIndexNum/100)*360}deg, rgb(190, 189, 189) 0deg )`
 }updatingHumCircle()
 
 function updatingUvCircle(){
-    let uvIndexNum=parseInt(uvIndex.innerHTML.replace("+","")) ;
-    uvCircle.style.background=` conic-gradient(#5e5ef3c0 ${(uvIndexNum*360)/11}deg, rgb(190, 189, 189) 0deg )`
+    let uvIndexNum=parseInt(nod.uvIndex.innerHTML.replace("+","")) ;
+    nod.uvCircle.style.background=` conic-gradient(#5e5ef3c0 ${(uvIndexNum*360)/11}deg, rgb(190, 189, 189) 0deg )`
 }updatingUvCircle()
 
 
@@ -683,8 +597,8 @@ function updatingUvCircle(){
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------------for using api-----------------------------------------------------------------------------------------
 //when click on icon search
-searchBtn.addEventListener("click",()=>{
-    let cityCoord=getCityCoordinates(searchInput.value,allCitiesData)
+nod.searchBtn.addEventListener("click",()=>{
+    let cityCoord=getCityCoordinates(nod.searchInput.value,allCitiesData)
     let lat;
     let lon;
     //error handling when user input incorrect or empty location and click on search button so that will display data of my current location 
@@ -731,29 +645,29 @@ function getWeatherWithApi(lon,lat,apiKey="52726fb4078f8d3926c7f682c9341f90"){
         let time_data =currentWeather.dt
         
         //display today data in short weather section
-        Location.innerText=location_data
-        mainImg.src=img_data
-        mainTemp.innerText=Math.round(temp_data)   
-        mainCond.innerText=cond_data
-        mainHum.innerText=Hum_data+"%"
-        date.innerText= "updated at "+convertUnixtotime(time_data)
+        nod.Location.innerText=location_data
+        nod.mainImg.src=img_data
+        nod.mainTemp.innerText=Math.round(temp_data)   
+        nod.mainCond.innerText=cond_data
+        nod.mainHum.innerText=Hum_data+"%"
+        nod.date.innerText= "updated at "+convertUnixtotime(time_data)
 
         
             
         //display today data in daily details section
-        humIndex.innerText=Hum_data
-        humStatus.innerText=getHumidityStatus(Hum_data)
+        nod.humIndex.innerText=Hum_data
+        nod.humStatus.innerText=getHumidityStatus(Hum_data)
         updatingHumCircle()
 
 
-        windIndex.innerText=wind_data
-        windStatus.innerText=getWindDirection(wind_deg_data)
+        nod.windIndex.innerText=wind_data
+        nod.windStatus.innerText=getWindDirection(wind_deg_data)
         // when i used Math.random because id didnt have this data in database 
-        visIndex.innerText=vis_data
-        visStatus.innerText=getVisibilityStatus(vis_data)
+        nod.visIndex.innerText=vis_data
+        nod.visStatus.innerText=getVisibilityStatus(vis_data)
        
-        sunrise.innerText=convertUnixtotime(sunrise_data)
-        sunset.innerText=convertUnixtotime(sunset_data)
+        nod.sunrise.innerText=convertUnixtotime(sunrise_data)
+        nod.sunset.innerText=convertUnixtotime(sunset_data)
 
         })
         .catch((err)=>{})     
@@ -771,9 +685,9 @@ function getWeatherWithApi(lon,lat,apiKey="52726fb4078f8d3926c7f682c9341f90"){
 
 // ------------------------------------------for using database-----------------------------------------------------------------------------------------
 //when click on icon search
-searchBtnDB.addEventListener("click",()=>{
+nod.searchBtnDB.addEventListener("click",()=>{
     
-    let cityCoord_Db=getCityCoordinates(searchInputDB.value,spCitiesData)
+    let cityCoord_Db=getCityCoordinates(nod.searchInputDB.value,spCitiesData)
     let lat_Db;
     let lon_Db;
     //error handling when user input incorrect or empty location and click on search button so that will display data of my current location 
@@ -818,11 +732,11 @@ function getWeatherWithDB(lon_Db,lat_Db){
         //display today data in short weather
         
 
-        Location.innerText=location_data
-        mainImg.src=img_data
-        mainTemp.innerText=temp_data
-        mainCond.innerText=cond_data
-        mainHum.innerText=Hum_data
+        nod.Location.innerText=location_data
+        nod.mainImg.src=img_data
+        nod.mainTemp.innerText=temp_data
+        nod.mainCond.innerText=cond_data
+        nod.mainHum.innerText=Hum_data
 
     //-----get daily weather for 7days
     response=await fetch(`mock server/dailyEdit.json`);
@@ -860,39 +774,39 @@ function getWeatherWithDB(lon_Db,lat_Db){
 
 
         for(let i=0; i<days_data.length; i++){
-            daysTitle[i].innerText =convertUnixtotime(days_data[i].dt ,"day").substring(0,3)
-            daysImg[i].src=getIcon(days_data[i].weather[0].main,days_data[i].weather[0].icon)
-            daysTemp[i].innerText= Math.round ( convertTempTo(days_data[i].temp.day ,"K-C") )
+            nod.daysTitle[i].innerText =convertUnixtotime(days_data[i].dt ,"day").substring(0,3)
+            nod.daysImg[i].src=getIcon(days_data[i].weather[0].main,days_data[i].weather[0].icon)
+            nod.daysTemp[i].innerText= Math.round ( convertTempTo(days_data[i].temp.day ,"K-C") )
         }
 
         //display today data in day details
         function displayDailyDetails(onThisDay){
             //display day details
-            humIndex.innerText=onThisDay.humidity+"%"
-            humStatus.innerText=getHumidityStatus(onThisDay.humidity)
+            nod.humIndex.innerText=onThisDay.humidity+"%"
+            nod.humStatus.innerText=getHumidityStatus(onThisDay.humidity)
             updatingHumCircle()
-            windIndex.innerText=convertspeedTo(onThisDay.speed)
-            windStatus.innerText=getWindDirection(onThisDay.deg)
+            nod.windIndex.innerText=convertspeedTo(onThisDay.speed)
+            nod.windStatus.innerText=getWindDirection(onThisDay.deg)
             // when i used Math.random because id didnt have this data in database 
-            visIndex.innerText=(Math.random()*10).toFixed(2)
-            visStatus.innerText=getVisibilityStatus((Math.random()*10).toFixed(2))
-            uvIndex.innerText=onThisDay.uvi
-            uvStatus.innerText=measureUvIndex(onThisDay.uvi)
+            nod.visIndex.innerText=(Math.random()*10).toFixed(2)
+            nod.visStatus.innerText=getVisibilityStatus((Math.random()*10).toFixed(2))
+            nod.uvIndex.innerText=onThisDay.uvi
+            nod.uvStatus.innerText=measureUvIndex(onThisDay.uvi)
             updatingUvCircle()
-            airIndex.innerText=(Math.random()*100).toFixed(0)
-            airStatus.innerText=getAirQualityStatus((Math.random()*100).toFixed(0))
+            nod.airIndex.innerText=(Math.random()*100).toFixed(0)
+            nod.airStatus.innerText=getAirQualityStatus((Math.random()*100).toFixed(0))
         }
         
         displayDailyDetails(days_data[0])
         
-        days.forEach((day)=>{
+        nod.days.forEach((day)=>{
            
             day.addEventListener("click",()=>{
-                for(let i=0;i<days.length;i++){
-                    days[i].classList.remove("active")
+                for(let i=0;i<nod.days.length;i++){
+                    nod.days[i].classList.remove("active")
                 }
                 day.classList.add("active")
-                dayName=day.innerText.substring(0,3).trim().toUpperCase()
+                let dayName=day.innerText.substring(0,3).trim().toUpperCase()
                 for(let i=0;i<days_data.length;i++){
                     let daysName_data=convertUnixtotime(days_data[i].dt,"day").substring(0,3).toUpperCase()
                     if(daysName_data==dayName){ 
