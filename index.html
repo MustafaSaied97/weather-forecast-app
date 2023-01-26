@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>weather</title>
+    <link rel="icon" href="images/weather-logo.png">
+    
+    <!-- main css for template -->
+    <link rel="stylesheet" href="css/weather.css">
+
+    <!-- render all elements normally in all browser -->
+    <link rel="stylesheet" href="css/normalize.css">
+
+    <!-- fontawsom library -->
+    <link rel="stylesheet" href="css/all.min.css">
+
+    <!-- google fonts (works sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@200;300;400;500;600;700;800&display=swap');
+        </style>
+    
+</head>
+<body>
+    <div class="cloud">
+        <img src="./images/cloud1.png" alt="" style="--i:1">
+        <img src="./images/cloud2.png" alt="" style="--i:2">
+        <img src="./images/cloud3.png" alt="" style="--i:3">
+        <img src="./images/cloud1.png" alt="" style="--i:4">
+        <img src="./images/cloud2.png" alt="" style="--i:5">
+    </div>
+
+    <div class="page0">
+        <button class="api">using API</button>
+        <button class="database">mocke server</button>
+    </div>
+    
+    <div class="homepage">
+
+    
+    <nav>
+        <div class="search">
+            <input type="text" class="search-text by-api" placeholder="search...">
+            <input type="text" class="search-text by-database" placeholder="search..." >
+
+            <button class="search-icon by-api"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <button class="search-icon by-database"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <ul class="suggesstion">         
+            </ul>
+        </div>
+        <div class="temp-unit">
+            <button class="celcius active">°C</button>
+            <button class="fahrenheit ">°F</button>
+        </div>
+        <div class="day-week">
+            <button class="week active">Daily</button>
+            <button class="day" > Hourly </button>
+        </div>
+        <div class="mode">
+            <button class="light active"><i class="fa-regular fa-sun"></i></button>
+            <button class="dark"><i class="fa-solid fa-moon"></i></button>      
+        </div>
+        <div class="back">
+            <button class="light active"><i class="fa-solid fa-circle-arrow-left"></i></button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section>
+            <div class="short-weather">
+                <div class="location">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>cairo,EG</span>
+                </div>
+                <div class="status">
+                    <img src="images/Clouds-d.png" alt="weather status">
+                    <h2>25</h2>
+                    <span>°C</span>
+                </div>
+                <div class="time">
+                    <h2 class="by-api">sun,10:30</h2>
+                    <h2 class="by-database">sun,10:30</h2>
+                </div>
+                <div class="min-status">
+                    <div class="min-status">
+                        <i class="fa-solid fa-cloud"  style="color:azure"></i>
+                         <span id="mainCondition">clear</span>
+                    </div>
+                    <div class="min-status">
+                        <i class="fa-solid fa-droplet" style="color:rgb(73, 144, 226)"></i>
+                         <span id="mainHumidity">0%</span>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="daily">
+                <div class="title">Daily</div>
+
+                <div class="slider">
+                    <button id="left" class="btn left"><i class="fa-solid fa-chevron-left"></i></button>
+
+                    <div class="inner-slider">
+
+                        <div class="card week">
+                            <h2> Sun</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card week">
+                            <h2> Mon</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card week">
+                            <h2> Tue</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card week">
+                            <h2>Wed</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card  week">
+                            <h2>Thu</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card week">
+                            <h2>Sat</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card week">
+                            <h2>Fri</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2>1:00AM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2> 2:00AM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2> 3:00AM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2> 4:00AM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2>5:00AM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2>6:00AM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2>7:00AM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2>8:00AM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2>9:00AM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2>10:00AM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2>11:00AM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2>12:00AM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2>1:00PM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2> 2:00PM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2> 3:00PM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2> 4:00PM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2>5:00PM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2>6:00PM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2>7:00PM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2>8:00PM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2>9:00PM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2>10:00PM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2>11:00PM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        <div class="card today">
+                            <h2>12:00PM</h2>
+                            <img src="images/Clear-d.png" alt="">
+                            <div class="temp">
+                                <h2>25</h2>
+                                <span>°C</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <button id="right" class="btn right"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+
+            </div>
+               
+                
+        </section> 
+        <section>
+            <div class="day-details">
+                
+                <div class="Humidity">
+                    <h2 class="title">Humidity</h2>
+                    <div class="circle">
+                        <h2 class="index" id="humIndex">0%</h2>
+                        <h2 class="status" id="humStatus">High</h2>
+                    </div>
+                </div>
+                
+                <div class="wind">
+                    <h2 class="title">Wind Status</h2>
+                    <h2 class="index" id="windIndex">6</h2>
+                    <h2 class="status" id="windStatus">'↗ NE'</h2>
+                </div>
+                <div class="visibility">
+                    <h2 class="title">Visibility</h2>
+                    <h2 class="index" id="visIndex">6</h2>
+                    <h2 class="status" id="visStatus">High</h2>
+                </div>
+                <div class="uv">
+                    <h2 class="title">UV Index</h2>
+                    <div class="circle">
+                        <h2 class="index" id="uvIndex">0</h2>
+                        <h2 class="status" id="uvStatus">High</h2>
+                    </div>
+                </div>
+                <div class="sun">
+                    <h2 class="title">Sunrise</h2>
+                    <div>
+                        <i class="fa-sharp fa-solid fa-caret-up"></i>
+                        <span id="sunrise">6:85PM</span>
+                    </div>
+                    <h2 class="title">Sunset</h2>
+                    <div>
+                        <i class="fa-sharp fa-solid fa-caret-down"></i>
+                        <span id="sunset">6:85PM</span>
+                    </div>
+                    
+                    
+                </div>
+                <div class="air">
+                    <h2 class="title" >Air Qualtiy</h2>
+                    <h2 class="index" id="airIndex">6</h2>
+                    <h2 class="status" id="airStatus">High</h2>
+                </div>
+            </div>
+        </section>   
+    </div>
+
+    </div>
+
+    <script src="js/weather.js"></script>
+</body>
+</html>

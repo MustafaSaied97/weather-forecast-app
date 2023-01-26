@@ -1,0 +1,538 @@
+:root{
+   --backColor:linear-gradient(rgb(240, 233, 233) 100px,rgb(129, 178, 218));
+   --dayDetailsColor:rgb(188, 210, 228);
+   /* --backColor:linear-gradient(rgba(255, 255, 255, 0.567),rgb(14, 17, 123));
+   --dayDetailsColor:rgb(203, 204, 246); */
+   
+}
+*{
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    box-sizing:border-box;
+}
+body{
+    font-family: 'Work Sans', sans-serif;
+    white-space: wrap;   
+    background-image:var(--backColor);
+   
+    height:100vh;
+    overflow: hidden;
+       
+}
+/*---------------------------------------------------------------------------------*/
+.cloud img{
+    animation: cloud  linear infinite;
+    animation-fill-mode: forwards;
+    animation-play-state:running;
+    
+    height: 50%;
+    max-width: 100%;
+    position: fixed;
+    z-index: -1;
+    bottom: 50vh;
+  
+}
+
+.cloud img:nth-child(1){
+    
+    animation-duration: 50s;
+    transform: translateX(-63%)
+
+}
+.cloud img:nth-child(2){
+    transform: translateX(7%);
+    animation-duration: 50s;
+}
+.cloud img:nth-child(3){
+    transform: translateX(80%);
+    animation-duration: 50s;
+   
+}
+.cloud img:nth-child(4){
+    transform: translateX(130%);
+    animation-duration: 50s;
+}
+.cloud img:nth-child(5){
+    transform: translateX(300%);
+    animation-duration: 150s;
+    
+    
+}
+@keyframes cloud{
+   
+    100%{
+      
+        transform: translateX(200%);
+    }
+}
+
+/*---------------page0------------------------------------------------------------------*/
+body{
+    position: relative;
+}
+.page0{
+    /* display: none; */
+
+    /* background-color: white; */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+      
+}
+/*this animation for make page0 not apearing when page refreshing*/
+
+.page0 button{  
+    font-size: 1.5rem;
+    font-weight:500 ;
+    color: rgb(4, 4, 84);
+
+    padding: 15px;
+    /* background-color: white; */
+    
+    border: none;
+    border-radius: 30px;
+    margin: 5px;
+    background-image: linear-gradient(138deg,#b8eeffa6,white);;
+    
+    
+}
+
+.page0 button:hover{
+    background-image: linear-gradient(315deg,#b8eeff77,#fffefe); 
+    cursor: pointer;           
+}
+/*---------------home page------------------------------------------------------------------*/
+.homepage{
+    display: none;
+}
+
+nav{
+    display: flex;
+    flex-flow:row-reverse nowrap;
+    justify-content: flex-start;
+   
+    align-items: center;
+    background-color: rgba(29, 30, 30, 0.196);
+} 
+nav > div{
+    font-size: 1.3rem;
+    display: flex;
+    flex-wrap: nowrap;
+    margin:  5px;
+}
+@media(max-width:768px){
+    nav > div{
+        font-size: 1rem;
+    }
+}
+nav .search {
+    border-radius: 10px;
+    background-color:rgba(128, 128, 128, 0.201) ;
+}
+
+nav .search .search-text{
+    padding: 5px;
+    outline: none;
+    border: none;
+    background-color:transparent ;
+    width: 250px;
+  
+}
+nav .search .search-text.by-database{
+ display: none;
+}
+/* nav .search:hover .search-text {
+    width: 250px;
+} */
+@media(max-width:768px) {
+    nav .search .search-text{
+        width: 0px;
+    } 
+}
+nav .search .suggesstion{
+  
+    margin-left: 10px;
+    padding-left: 0px;
+    top:15px;
+    z-index: 1;
+    position: absolute;
+    background-color:rgb(196, 196, 196) ;
+    width: 240px;
+    border-radius: 0px 0px 5px 5px;
+    list-style: none;
+   /* display: none; */
+   display: block;
+}
+nav .search .suggesstion li{
+    padding-left: 10px;
+}
+
+nav .search .suggesstion li:hover{
+    cursor: pointer;
+    background-color:rgb(214, 212, 212) ;
+    border-radius: 5px;
+}
+
+nav .search .search-icon{
+    
+    border-color:rgba(74, 69, 69, 0.078) ;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color:transparent ;
+}
+nav .search .search-icon.by-database{
+display: none;
+}
+
+ @media(max-width:768px) {
+    nav .search .search-icon{
+        cursor: auto;
+    } 
+}
+
+nav .search .search-icon:active{ 
+    transform: scale(.8);
+}
+
+.temp-unit button{
+    padding: 5px;
+    margin: 0 1px;
+    border-radius: 50%;
+    border: none;
+    background-color:transparent;
+    cursor: pointer;
+}
+.temp-unit button.active{
+    color: rgb(255, 255, 255);
+    background-color:rgba(128, 128, 128, 0.332)
+ }
+
+
+.day-week button{
+    margin: 0 1px;
+    border-radius: 5px;
+    border: none;
+    background-color:transparent;
+    cursor: pointer;
+
+    display: none;
+}
+
+.day-week button.active{
+    color: rgb(92, 92, 222);
+ }
+
+ .mode button{ 
+    padding: 5px;
+    margin: 0 1px;
+    border-radius: 20%;
+    border: none;
+    background-color:transparent;
+    cursor: pointer;
+}
+.mode button.active{
+    color: rgb(255, 255, 255);
+    background-color:rgba(128, 128, 128, 0.332)
+}
+.back:active{
+   transform: scale(.8); 
+}
+.back button{
+    border: none;
+    background-color:transparent;
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.66);
+    font-size: 22px;
+}
+/* ---------------------------------------------------- */
+.container{
+   
+    padding-top:10vh ;
+
+
+    width: 100%;
+    position: relative;
+
+}
+section {
+   
+    padding: 0px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    
+}
+/* ---------------------------------------------------- */
+.short-weather{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: start;
+    align-items: center;
+    text-align: center;
+  
+}
+.short-weather .location{
+    margin-top: 10px;
+}
+
+.short-weather .status{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+   
+}
+.short-weather .status img{
+    width: 80px;
+   
+}
+.short-weather .status h2{
+    font-size: 5rem;
+    font-weight: 400;
+    margin: 0;
+}
+@media(max-width:768px){
+    .short-weather .status h2{
+        font-size: 4rem;
+    }
+}
+.short-weather .status  span{
+    font-size: 2rem;
+    margin-top: -30px;
+}
+
+.short-weather .time h2{
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 300;
+
+}
+.short-weather .time .by-database{
+    display: none;
+}
+/* ---------------------------------------------------- */
+.daily{
+
+    
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    
+    width: 90vw;
+    max-width: 1200px;
+
+    width:min-content; /*VIP note*/
+    
+    display: none;
+}
+.daily .title{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: x-large;
+}
+.daily .slider{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+
+.daily .slider .btn{
+    position: absolute;
+    
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    border-color: transparent;
+    cursor: pointer;
+   
+}
+.daily .slider .btn:hover{
+    border-color: white;
+}
+.daily .slider .btn:active{
+    transform: scale(.9);
+}
+.daily .slider  .right{
+    
+    right:-20px ;
+}
+.daily .slider  .left{
+    left:-20px ;
+}
+
+
+
+.daily .slider .inner-slider{
+    display: flex;
+    justify-content: flex-start;
+    cursor: pointer;
+   
+   
+    overflow: hidden;
+    scroll-behavior: smooth;
+    white-space: nowrap;
+    
+    
+    
+}
+@media (max-width:900px) {
+    .daily .slider .inner-slider{
+        width: 90vw;
+        cursor: auto;
+    }
+}
+/*
+@media (max-width:1000px) {
+    .daily .slider .inner-slider{
+         width: fit-content; 
+    }
+    
+}
+*/
+
+
+
+.slider .inner-slider .card{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    align-items: center;
+    
+    background-color: rgba(0, 0, 0, 0.327);
+    border-radius: 10px;
+    margin-left: 14px;
+    min-width: 100px; 
+    
+}
+.slider .inner-slider .card.active{
+    background-color:rgba(0, 0, 0, 0.078)
+}
+.slider .inner-slider .card:first-child{
+    margin-left: 0px; 
+}
+.slider .inner-slider .card:nth-child(8){
+    margin-left: 0px; 
+}
+
+.slider .inner-slider .today{
+    display: none; 
+}
+
+
+.daily .slider .inner-slider .card h2{
+    font-size: 1rem;
+    font-weight: 400;
+}
+.daily .slider .inner-slider .card img{
+   width: 70px;
+}
+.daily .slider .inner-slider .card .temp{
+   display: flex;
+   align-items: center;
+}
+.daily .slider .inner-slider .card .temp span{
+    font-size: .7rem;
+    margin-top: -10px;
+    
+ }
+ /* ----------------------------------------------------- */
+.day-details {
+    margin-top: 5px;
+    display: grid;
+    grid-template-columns: repeat(2,minmax(100px,250px));
+    /* grid-template-rows: repeat(2,minmax(auto,110px)); */
+    justify-content:center;
+    column-gap: 2vw;
+    row-gap: 5vh;
+}
+.day-details > div{
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    /* background-color: var(--dayDetailsColor); */
+    background-image: linear-gradient(rgba(255, 255, 255, 0.859) 15px, var(--dayDetailsColor) );
+    
+}
+div .title{
+    font-size: small;
+    margin-top: 2px;
+}
+div .index{
+    position: relative;
+    font-size: 1.2rem;
+    margin: 0;
+}
+div .status{
+    position: relative;
+
+    font-size: small;
+    color: rgb(111, 108, 108);
+    font-weight: 500;
+    
+    
+   
+}
+
+  
+.uv .circle,  .Humidity .circle{
+    position: relative;
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+    /* controlled by js code */
+    background:  conic-gradient(#5e5ef3c0 0deg , var(--dayDetailsColor) 0deg);
+    transition: .5s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.uv .circle::before ,.Humidity .circle::before{
+    content: "";
+    position: absolute;
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+    /* background:  var(--dayDetailsColor) ; */
+    background-image: linear-gradient(white 20px, var(--dayDetailsColor) );
+}
+.Humidity .circle .index ,.Humidity .circle .status{
+    position: relative;
+}
+
+.day-details .air , .day-details .uv {
+    display: none;
+}
+
+
+/*for page without api*/
+
+
+.container.not-api{
+    padding-top:0px ;
+}
+.day-week button.not-api{
+    display: block;
+}
+.daily.not-api{
+    display: flex;
+}
+ .day-details .uv.not-api {
+    display: flex;
+} 
+.day-details .air.not-api , .day-details .visibility.not-api  ,.day-details .sun.not-api  {
+    display: none;
+} 
+
+
+
+
+
