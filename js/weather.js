@@ -346,7 +346,340 @@ allSearchInput.forEach((inpt)=>{
     }
     
 
+ 
+//---------------------------------------------------------------functions---------------------------------------------------------------------------------------------------------------------------
+
+//function to get specific city data depend on its longitudinal and latitudinal from array of cities data  in (arrOfResponses) //this function made for local weather function without api 
+function getCorrectResponse(lat,lon,arrOfResponses){
+    for (const res of arrOfResponses) {
+        if(res.city.coord.lon==lon &&res.city.coord.lat==lat ){
+               return res
+        }
+    }    
+}
+//this function made for local weather function without api 
+function getClosestResponse(lat,lon,arrOfResponses){
     
+    for (const res of arrOfResponses) {
+        if( Math.round(res.city.coord.lon) == Math.round(lon) && Math.round(res.city.coord.lat) == Math.round(lat) ){
+               return res
+        }
+    }    
+}
+
+function getIcon(condition,nORd) {
+    //check for nORd 
+  if (nORd.indexOf("n")){
+        nORd="n"
+  }
+  else{
+        nORd="d"
+  }
+
+  //check for condition 
+  let conditions=["Clear","Clouds","Rain","Drizzle","Snow","Thunderstorm"]
+    conditions.forEach((cond)=>{
+        if(condition ==cond){
+            return `images/overcast.png`;
+        }    
+    })
+
+    return `images/${condition}-${nORd}.png`;
+  
+}
+ 
+
+function measureUvIndex(uvIndex) {
+    if (uvIndex <= 2) {
+        return "Low";
+    } else if (uvIndex <= 5) {
+        return "Moderate";
+    } else if (uvIndex <= 7) {
+        return "High";
+    } else if (uvIndex <= 10) {
+        return "Very High";
+    } else {
+        return "Extreme";
+    }
+  }
+
+  function getHumidityStatus(humidity) {
+    if (humidity <= 30) {
+      return "Low";
+    } else if (humidity <= 60) {
+        return "Moderate";
+    } else {
+        return "High";
+    }
+  }
+  function getWindStatus(windIndex) {
+    if (humidity <= 30) {
+      return "Low";
+    } else if (humidity <= 60) {
+        return "Moderate";
+    } else {
+        return "High";
+    }
+  }
+
+
+
+
+  function getVisibilityStatus(visibility) {
+    if (visibility <= 0.3) {
+      return"Dense Fog";
+    } else if (visibility <= 0.16) {
+      return"Moderate Fog";
+    } else if (visibility <= 0.35) {
+      return"Light Fog";
+    } else if (visibility <= 1.13) {
+      return"Very Light Fog";
+    } else if (visibility <= 2.16) {
+      return"Light Mist";
+    } else if (visibility <= 5.4) {
+      return"Very Light Mist";
+    } else if (visibility <= 10.8) {
+      return"Clear Air";
+    } else {
+      return"Very Clear Air";
+    }
+  }
+  
+
+  function getAirQualityStatus(airQuality) {
+    if (airQuality <= 50) {
+      return"Good";
+    } else if (airQuality <= 100) {
+      return"Moderate";
+    } else if (airQuality <= 150) {
+      return"Unhealthy for Sensitive Groups";
+    } else if (airQuality <= 200) {
+      return"Unhealthy";
+    } else if (airQuality <= 250) {
+      return"Very Unhealthy";
+    } else {
+      return"Hazardous";
+    }
+  }
+  
+
+
+function convertUnixtotime(unixTimeStamp,include="nothing"){
+    
+    let now = new Date(unixTimeStamp*1000),
+        dayIndex = now.getDay(),
+        hour = now.getHours(),
+        minute = now.getMinutes();
+      
+    let days = [
+            "Sun",
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat"
+        ]
+
+
+    // 12 hours system
+    let PmOrAm = 'AM'
+    if (hour > 12) {
+        PmOrAm = 'PM'
+    }
+    hour = hour % 12;
+
+    //edit format
+    if (hour < 10) {
+        hour = "0" + hour
+    }
+    if (minute < 10) {
+        minute = "0" + minute
+    }
+        
+        
+
+    if(include.toUpperCase()=="nothing".toUpperCase())
+    {
+        return `${hour}:${minute} ${PmOrAm}`
+    }
+    else if(include.toUpperCase() == "day".toUpperCase()){
+         return `${days[dayIndex]},${hour}:${minute} ${PmOrAm}`
+    } 
+          
+}
+
+
+ //convert  temperature to Celcius or Fahrenheit Kelvin
+function convertTempTo(temp,convertToUnit="C-F") {
+    
+    if(convertToUnit.toUpperCase()==="C-F"){
+        return ((temp * 9) / 5 + 32).toFixed(1);
+    }else if(convertToUnit.toUpperCase()==="F-C"){
+        return ((temp-32)/1.8).toFixed(1);
+    }else if(convertToUnit.toUpperCase()==="K-F"){
+        return (((294.97*temp)-273.15)*(9/5)+32).toFixed(1);
+    }else if(convertToUnit.toUpperCase()==="F-K"){ 
+        return (((294.97*temp)-32)*(5/9)+273.15).toFixed(1);;
+    }else if(convertToUnit.toUpperCase()==="K-C"){
+        return (temp-273.15).toFixed(1);
+    }else if(convertToUnit.toUpperCase()==="C-K"){
+        return (temp+273.15).toFixed(1);
+    }
+    
+  }  
+
+
+function convertspeedTo(speed,convertToUnit="metric") {
+    if(convertToUnit.toLowerCase()==="metric"){
+        return (speed/2.23694).toFixed(1);
+    }else if(convertToUnit.toLowerCase()==="imperial"){
+        return (speed*2.23694).toFixed(1);
+    }
+  }  
+
+
+function getWindDirection(windDeg) {
+    const directions = ['↑ N', '↗ NE', '→ E', '↘ SE', '↓ S', '↙ SW', '← W', '↖ NW'];
+    return directions[Math.round(windDeg / 45) % 8];
+}
+
+
+
+
+async function getmylocation() {
+    let response =await fetch("https://geolocation-db.com/json/", {method: "GET",})
+    let coord =await response.json()
+    return coord
+}
+/*----------------------------updating time----------------------------------------------------*/
+function getDateTime(){
+    let now=new Date(),
+    dayIndex=now.getDay(),
+    hour=now.getHours(),
+    minute=now.getMinutes();
+
+    let days=[
+        "Sunday",
+        "Monday",
+        "Tuesday",  
+        "Wednesday",   
+        "Thursday",    
+        "Friday",     
+        "Saturday"    
+    ]
+    
+    // 12 hours system
+    let PmOrAm='AM'
+    if(hour>12){
+        PmOrAm='PM'
+    }
+
+    hour=hour % 12;
+    if(hour<10){
+        hour="0"+hour
+    }
+    if(minute<10){
+        minute="0"+minute
+    }
+   
+
+
+    return `${days[dayIndex]},${hour}:${minute} ${PmOrAm}`
+}
+
+//for updating time every second
+setInterval(()=>{dateDB.innerText=getDateTime()},1000)
+
+/*--------------------------------------------when refreshing page stay in same page----------------------------------------------------------------------*/
+function turnToApiPage(){
+    homePage.style.setProperty("display","block")
+    searchInput.style.setProperty("display","block")
+    searchBtn.style.setProperty("display","block")
+    date.style.setProperty("display","block")
+
+    
+    page0.style.setProperty("display","none")
+    searchInputDB.style.setProperty("display","none")
+    searchBtnDB.style.setProperty("display","none")
+    dateDB.style.setProperty("display","none")
+
+    container.classList.remove("not-api")
+    btnDay.classList.remove("not-api")
+    btnWeek.classList.remove("not-api")
+    daily.classList.remove("not-api")
+    uvDiv.classList.remove("not-api")
+    airDiv.classList.remove("not-api")
+    visDiv.classList.remove("not-api")
+    sunDiv.classList.remove("not-api")
+    clouds.forEach((cloud)=>{
+        cloud.style.setProperty("animation-play-state","paused")
+    })
+}
+function turnToDBPage(){
+    homePage.style.setProperty("display","block")
+    searchInputDB.style.setProperty("display","block")
+    searchBtnDB.style.setProperty("display","block")
+    dateDB.style.setProperty("display","block")
+
+
+    page0.style.setProperty("display","none")
+    searchInput.style.setProperty("display","none")
+    searchBtn.style.setProperty("display","none")
+    date.style.setProperty("display","none")
+
+    container.classList.add("not-api")
+    btnDay.classList.add("not-api")
+    btnWeek.classList.add("not-api")
+    daily.classList.add("not-api")
+    uvDiv.classList.add("not-api")
+    airDiv.classList.add("not-api")
+    visDiv.classList.add("not-api")
+    sunDiv.classList.add("not-api")
+    clouds.forEach((cloud)=>{
+        cloud.style.setProperty("animation-play-state","paused")
+    })
+}
+function turnToPage0(){
+    homePage.style.setProperty("display","none")
+    page0.style.setProperty("display","block")
+    
+    clouds.forEach((cloud)=>{
+        cloud.style.setProperty("animation-play-state","running")
+    })
+}
+
+
+
+/*---------------------------------sliding------------------------------------------------------------------------ */
+const innerSlider=document.querySelector(".daily .slider .inner-slider"),
+firstImg = innerSlider.querySelectorAll("img")[0],
+arrowIcons = document.querySelectorAll(".daily .slider .btn");
+
+arrowIcons.forEach(icon => {
+    icon.addEventListener("click", () => {
+        let firstImgWidth = firstImg.clientWidth + 150; // getting first img width & adding 14 margin value
+        // if clicked icon is left, reduce width value from the inner-slider scroll left else add to it
+        innerSlider.scrollLeft += icon.id == "left" ? -firstImgWidth : firstImgWidth;
+        // setTimeout(() => showHideIcons(), 60); // calling showHideIcons after 60ms
+    });
+});
+
+
+/*---------------------------------progress circle------------------------------------------------------------------------ */
+function updatingHumCircle(){
+    let humIndexNum=parseInt(humIndex.innerHTML.replace("%","")) ;
+    HumidityCircle.style.background=` conic-gradient(#5e5ef3c0 ${(humIndexNum/100)*360}deg, rgb(190, 189, 189) 0deg )`
+}updatingHumCircle()
+
+function updatingUvCircle(){
+    let uvIndexNum=parseInt(uvIndex.innerHTML.replace("+","")) ;
+    uvCircle.style.background=` conic-gradient(#5e5ef3c0 ${(uvIndexNum*360)/11}deg, rgb(190, 189, 189) 0deg )`
+}updatingUvCircle()
+
+
+
+   
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------------for using api-----------------------------------------------------------------------------------------
 //when click on icon search
@@ -403,8 +736,10 @@ function getWeatherWithApi(lon,lat,apiKey="52726fb4078f8d3926c7f682c9341f90"){
         mainTemp.innerText=Math.round(temp_data)   
         mainCond.innerText=cond_data
         mainHum.innerText=Hum_data+"%"
-        date.innerText= "updated at "+convertUnixtotime(time_data,"day")
+        date.innerText= "updated at "+convertUnixtotime(time_data)
 
+        
+            
         //display today data in daily details section
         humIndex.innerText=Hum_data
         humStatus.innerText=getHumidityStatus(Hum_data)
@@ -621,311 +956,4 @@ function getWeatherWithDB(lon_Db,lat_Db){
 }
 
 
-
-
-//---------------------------------------------------------------functions---------------------------------------------------------------------------------------------------------------------------
-
-//function to get specific city data depend on its longitudinal and latitudinal from array of cities data  in (arrOfResponses) //this function made for local weather function without api 
-function getCorrectResponse(lat,lon,arrOfResponses){
-    for (const res of arrOfResponses) {
-        if(res.city.coord.lon==lon &&res.city.coord.lat==lat ){
-               return res
-        }
-    }    
-}
-//this function made for local weather function without api 
-function getClosestResponse(lat,lon,arrOfResponses){
-    
-    for (const res of arrOfResponses) {
-        if( Math.round(res.city.coord.lon) == Math.round(lon) && Math.round(res.city.coord.lat) == Math.round(lat) ){
-               return res
-        }
-    }    
-}
-
-function getIcon(condition,nORd) {
-    //check for nORd 
-  if (nORd.indexOf("n")){
-        nORd="n"
-  }
-  else{
-        nORd="d"
-  }
-
-  //check for condition 
-  let conditions=["Clear","Clouds","Rain","Drizzle","Snow","Thunderstorm"]
-    conditions.forEach((cond)=>{
-        if(condition ==cond){
-            return `images/overcast.png`;
-        }    
-    })
-
-    return `images/${condition}-${nORd}.png`;
-  
-}
- 
-
-function measureUvIndex(uvIndex) {
-    if (uvIndex <= 2) {
-        return "Low";
-    } else if (uvIndex <= 5) {
-        return "Moderate";
-    } else if (uvIndex <= 7) {
-        return "High";
-    } else if (uvIndex <= 10) {
-        return "Very High";
-    } else {
-        return "Extreme";
-    }
-  }
-
-  function getHumidityStatus(humidity) {
-    if (humidity <= 30) {
-      return "Low";
-    } else if (humidity <= 60) {
-        return "Moderate";
-    } else {
-        return "High";
-    }
-  }
-  function getWindStatus(windIndex) {
-    if (humidity <= 30) {
-      return "Low";
-    } else if (humidity <= 60) {
-        return "Moderate";
-    } else {
-        return "High";
-    }
-  }
-
-
-
-
-  function getVisibilityStatus(visibility) {
-    if (visibility <= 0.3) {
-      return"Dense Fog";
-    } else if (visibility <= 0.16) {
-      return"Moderate Fog";
-    } else if (visibility <= 0.35) {
-      return"Light Fog";
-    } else if (visibility <= 1.13) {
-      return"Very Light Fog";
-    } else if (visibility <= 2.16) {
-      return"Light Mist";
-    } else if (visibility <= 5.4) {
-      return"Very Light Mist";
-    } else if (visibility <= 10.8) {
-      return"Clear Air";
-    } else {
-      return"Very Clear Air";
-    }
-  }
-  
-
-  function getAirQualityStatus(airQuality) {
-    if (airQuality <= 50) {
-      return"Good";
-    } else if (airQuality <= 100) {
-      return"Moderate";
-    } else if (airQuality <= 150) {
-      return"Unhealthy for Sensitive Groups";
-    } else if (airQuality <= 200) {
-      return"Unhealthy";
-    } else if (airQuality <= 250) {
-      return"Very Unhealthy";
-    } else {
-      return"Hazardous";
-    }
-  }
-  
-
-
-function convertUnixtotime(unixTimeStamp,include="nothing"){
-    
-    let fulltime =new Date(unixTimeStamp* 1000).toString();
-    let dayName=fulltime.substring(0,3)
-
-    let time =new Date(unixTimeStamp* 1000).toLocaleString();
-    let allTime=time.split(",")[1].trim().split(":");
-    let hours=allTime[0]
-    let minutes=allTime[1]
-    let seconds=allTime[2].split(" ")[0]
-    let AMorPM=allTime[2].split(" ")[1]
-
-    if(include.toUpperCase()=="nothing".toUpperCase())
-    {
-        return `${hours}:${minutes}${AMorPM}`
-    }
-    else if(include.toUpperCase() == "day".toUpperCase()){
-        return `${dayName} ${hours}:${minutes}${AMorPM}`
-    } 
-    
-}
-
- //convert  temperature to Celcius or Fahrenheit Kelvin
-function convertTempTo(temp,convertToUnit="C-F") {
-    
-    if(convertToUnit.toUpperCase()==="C-F"){
-        return ((temp * 9) / 5 + 32).toFixed(1);
-    }else if(convertToUnit.toUpperCase()==="F-C"){
-        return ((temp-32)/1.8).toFixed(1);
-    }else if(convertToUnit.toUpperCase()==="K-F"){
-        return (((294.97*temp)-273.15)*(9/5)+32).toFixed(1);
-    }else if(convertToUnit.toUpperCase()==="F-K"){ 
-        return (((294.97*temp)-32)*(5/9)+273.15).toFixed(1);;
-    }else if(convertToUnit.toUpperCase()==="K-C"){
-        return (temp-273.15).toFixed(1);
-    }else if(convertToUnit.toUpperCase()==="C-K"){
-        return (temp+273.15).toFixed(1);
-    }
-    
-  }  
-function convertspeedTo(speed,convertToUnit="metric") {
-    if(convertToUnit.toLowerCase()==="metric"){
-        return (speed/2.23694).toFixed(1);
-    }else if(convertToUnit.toLowerCase()==="imperial"){
-        return (speed*2.23694).toFixed(1);
-    }
-  }  
-
-
-function getWindDirection(windDeg) {
-    const directions = ['↑ N', '↗ NE', '→ E', '↘ SE', '↓ S', '↙ SW', '← W', '↖ NW'];
-    return directions[Math.round(windDeg / 45) % 8];
-}
-
-
-
-
-async function getmylocation() {
-    
-
-    let response =await fetch("https://geolocation-db.com/json/", {method: "GET",})
-    let coord =await response.json()
-    return coord
-}
-/*----------------------------updating time----------------------------------------------------*/
-function getDateTime(){
-    let now=new Date(),
-    dayIndex=now.getDay(),
-    hour=now.getHours(),
-    minute=now.getMinutes();
-
-    let days=[
-        "Sunday",
-        "Monday",
-        "Tuesday",  
-        "Wednesday",   
-        "Thursday",    
-        "Friday",     
-        "Saturday"
-        
-    ]
-    // 12 hours system
-    let PmOrAm='AM'
-    if(hour>12){
-        PmOrAm='PM'
-    }
-
-    hour=hour % 12;
-    if(hour<10){
-        hour="0"+hour
-    }
-    if(minute<10){
-        minute="0"+minute
-    }
-   
-
-
-    return `${days[dayIndex]},${hour}:${minute} ${PmOrAm}`
-}
-
-//for updating time every second
-setInterval(()=>{dateDB.innerText=getDateTime()},1000)
-
-/*--------------------------------------------when refreshing page stay in same page----------------------------------------------------------------------*/
-function turnToApiPage(){
-    homePage.style.setProperty("display","block")
-    searchInput.style.setProperty("display","block")
-    searchBtn.style.setProperty("display","block")
-    date.style.setProperty("display","block")
-
-    
-    page0.style.setProperty("display","none")
-    searchInputDB.style.setProperty("display","none")
-    searchBtnDB.style.setProperty("display","none")
-    dateDB.style.setProperty("display","none")
-
-    container.classList.remove("not-api")
-    btnDay.classList.remove("not-api")
-    btnWeek.classList.remove("not-api")
-    daily.classList.remove("not-api")
-    uvDiv.classList.remove("not-api")
-    airDiv.classList.remove("not-api")
-    visDiv.classList.remove("not-api")
-    sunDiv.classList.remove("not-api")
-    clouds.forEach((cloud)=>{
-        cloud.style.setProperty("animation-play-state","paused")
-    })
-}
-function turnToDBPage(){
-    homePage.style.setProperty("display","block")
-    searchInputDB.style.setProperty("display","block")
-    searchBtnDB.style.setProperty("display","block")
-    dateDB.style.setProperty("display","block")
-
-
-    page0.style.setProperty("display","none")
-    searchInput.style.setProperty("display","none")
-    searchBtn.style.setProperty("display","none")
-    date.style.setProperty("display","none")
-
-    container.classList.add("not-api")
-    btnDay.classList.add("not-api")
-    btnWeek.classList.add("not-api")
-    daily.classList.add("not-api")
-    uvDiv.classList.add("not-api")
-    airDiv.classList.add("not-api")
-    visDiv.classList.add("not-api")
-    sunDiv.classList.add("not-api")
-    clouds.forEach((cloud)=>{
-        cloud.style.setProperty("animation-play-state","paused")
-    })
-}
-function turnToPage0(){
-    homePage.style.setProperty("display","none")
-    page0.style.setProperty("display","block")
-    
-    clouds.forEach((cloud)=>{
-        cloud.style.setProperty("animation-play-state","running")
-    })
-}
-
-
-
-/*---------------------------------sliding------------------------------------------------------------------------ */
-const innerSlider=document.querySelector(".daily .slider .inner-slider"),
-firstImg = innerSlider.querySelectorAll("img")[0],
-arrowIcons = document.querySelectorAll(".daily .slider .btn");
-
-arrowIcons.forEach(icon => {
-    icon.addEventListener("click", () => {
-        let firstImgWidth = firstImg.clientWidth + 150; // getting first img width & adding 14 margin value
-        // if clicked icon is left, reduce width value from the inner-slider scroll left else add to it
-        innerSlider.scrollLeft += icon.id == "left" ? -firstImgWidth : firstImgWidth;
-        // setTimeout(() => showHideIcons(), 60); // calling showHideIcons after 60ms
-    });
-});
-
-
-/*---------------------------------progress circle------------------------------------------------------------------------ */
-function updatingHumCircle(){
-    let humIndexNum=parseInt(humIndex.innerHTML.replace("%","")) ;
-    HumidityCircle.style.background=` conic-gradient(#5e5ef3c0 ${(humIndexNum/100)*360}deg, rgb(190, 189, 189) 0deg )`
-}updatingHumCircle()
-
-function updatingUvCircle(){
-    let uvIndexNum=parseInt(uvIndex.innerHTML.replace("+","")) ;
-    uvCircle.style.background=` conic-gradient(#5e5ef3c0 ${(uvIndexNum*360)/11}deg, rgb(190, 189, 189) 0deg )`
-}updatingUvCircle()
 
